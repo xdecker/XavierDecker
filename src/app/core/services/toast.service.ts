@@ -14,6 +14,7 @@ export class ToastService {
   toast$ = this.toastSubject.asObservable();
 
   showSuccess(message: string) {
+    console.log("mostrando toast");
     this.toastSubject.next({ type: 'success', message });
   }
 

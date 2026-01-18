@@ -1,7 +1,12 @@
 <div class="toast-container">
-  @for(t of messages; track t.message){
-  <div class="toast" [ngClass]="t.type">
-    {{ t.message }}
-  </div>
+  @for (t of messages; track t.message) {
+    <div class="toast" [class]="t.type">
+      <div class="toast-title">
+        {{ t.type === 'success' ? 'Éxito' : 'Error' }}
+      </div>
+      <div class="toast-message">
+        {{ t.message }}
+      </div>
+    </div>
   }
 </div>
