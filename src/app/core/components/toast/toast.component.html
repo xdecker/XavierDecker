@@ -1,0 +1,7 @@
+<div class="toast-container">
+  @for(t of messages; track t.message){
+  <div class="toast" [ngClass]="t.type">
+    {{ t.message }}
+  </div>
+  }
+</div>

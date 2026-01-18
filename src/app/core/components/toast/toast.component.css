@@ -1,0 +1,33 @@
+.toast-container {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    z-index: 9999;
+  }
+  
+  .toast {
+    padding: 0.75rem 1rem;
+    border-radius: 0.25rem;
+    color: white;
+    font-weight: bold;
+    opacity: 0.9;
+    animation: fadeInOut 0.5s ease-in-out;
+  }
+  
+  .toast.success {
+    background-color: #28a745;
+  }
+  
+  .toast.error {
+    background-color: #dc3545;
+  }
+  
+  @keyframes fadeInOut {
+    0% { opacity: 0; transform: translateY(-10px); }
+    20% { opacity: 1; }
+    80% { opacity: 1; }
+    100% { opacity: 0; transform: translateY(-10px); }
+  }
