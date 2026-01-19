@@ -4,10 +4,6 @@ import { Observable } from 'rxjs';
 import { Product } from '../../domain/models/product.model';
 import { environment } from '../../../../../environments/environment';
 
-export interface ProductResponse {
-  data: Product[];
-  total: number;
-}
 
 @Injectable({
   providedIn: 'root',
@@ -18,10 +14,32 @@ export class ProductApi {
   constructor(private http: HttpClient) {}
 
   getProducts() {
-    return this.http.get<{ data: Product[]; total: number }>(this.baseUrl);
+    return this.http.get<{ data: Product[] }>(this.baseUrl);
   }
 
-  deleteProduct(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/${id}`);
+  getProduct(id: string) {
+    return this.http.get<Product>(`${this.baseUrl}/${id}`);
+  }
+
+  verifyIdentifier(id: string) {
+    return this.http.get<boolean>(`${this.baseUrl}/verification/${id}`);
+  }
+
+  deleteProduct(id: string): Observable<{ message: string }> {
+    return this.http.delete<{ message: string }>(`${this.baseUrl}/${id}`);
+  }
+
+  createProduct(product: Product) {
+    return this.http.post<{ data: Product; message: string }>(
+      this.baseUrl,
+      product
+    );
+  }
+
+  updateProduct(product: Product) {
+    return this.http.put<{ data: Product; message: string }>(
+      `${this.baseUrl}/${product.id}`,
+      product
+    );
   }
 }

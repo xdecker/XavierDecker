@@ -10,11 +10,27 @@ import { firstValueFrom, map, Observable } from 'rxjs';
 export class ProductRepositoryImpl implements ProductRepository {
   constructor(private api: ProductApi) {}
 
-  async getAll(): Promise<{ data: Product[]; total: number }> {
+  async getAll(): Promise<{ data: Product[] }> {
     return firstValueFrom(this.api.getProducts());
   }
 
-  async delete(id: string): Promise<void> {
-    await firstValueFrom(this.api.deleteProduct(id));
+  async get(id: string): Promise<Product> {
+    return firstValueFrom(this.api.getProduct(id));
+  }
+
+  async verifyId(id: string): Promise<boolean> {
+    return firstValueFrom(this.api.verifyIdentifier(id));
+  }
+
+  async delete(id: string): Promise<{ message: string }> {
+    return firstValueFrom(this.api.deleteProduct(id));
+  }
+
+  async create(product: Product): Promise<{ data: Product; message: string }> {
+    return firstValueFrom(this.api.createProduct(product));
+  }
+
+  async update(product: Product): Promise<{ data: Product; message: string }> {
+    return firstValueFrom(this.api.updateProduct(product));
   }
 }
