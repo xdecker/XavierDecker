@@ -7,11 +7,12 @@ import { ToastService } from '../../../../../core/services/toast.service';
 import { ConfirmDialogComponent } from '../../../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { PRODUCT_REPOSITORY } from '../../../domain/tokens/product-repository.token';
 import { ProductRepositoryImpl } from '../../../infrastructure/repositories/product.repository.impl';
+import { RouterLink } from "@angular/router";
 
 @Component({
   selector: 'app-product-list',
   standalone: true,
-  imports: [CommonModule, ConfirmDialogComponent],
+  imports: [CommonModule, ConfirmDialogComponent, RouterLink],
   providers: [
     GetProductsUseCase,
     DeleteProductUseCase,
@@ -113,12 +114,12 @@ export class ProductListComponent implements OnInit {
 
     this.deleteProduct
       .execute(this.selectedProduct.id)
-      .then(() => {
-        this.toast.showSuccess('Producto eliminado');
+      .then((res) => {
+        this.toast.showSuccess(res.message);
         this.loadProducts();
       })
-      .catch(() => {
-        this.toast.showError('No se pudo eliminar el producto');
+      .catch((err) => {
+        this.toast.showError(err.message ?? 'No se pudo eliminar el producto');
       })
       .finally(() => {
         this.showConfirm = false;
@@ -143,6 +144,6 @@ export class ProductListComponent implements OnInit {
 
   editProduct(product: Product) {
     this.toast.showSuccess(`Editar producto: ${product.name}`);
-    this.dropdownOpen = null; // cerramos el dropdown
+    this.dropdownOpen = null;
   }
 }

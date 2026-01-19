@@ -1,12 +1,20 @@
 <div class="product-list">
-  <!-- input buscador -->
-  <input
-    #searchInput
-    type="text"
-    placeholder="Buscar producto"
-    (input)="onSearch(searchInput.value)"
-    class="search-input"
-  />
+  <div class="actions-top">
+    <div class="container-input-search">
+      <input
+        #searchInput
+        type="text"
+        placeholder="Buscar producto"
+        (input)="onSearch(searchInput.value)"
+        class="search-input"
+      />
+    </div>
+
+    <div class="container-btn-add">
+      <div><a class="btn btn-bp" routerLink="create">Agregar</a></div>
+    </div>
+  </div>
+
   <div class="product-table">
     <table class="table">
       <thead>
@@ -65,20 +73,17 @@
     </table>
 
     <div class="footer-table">
-
-      <div style="width: 100%;">
-        <strong>{{total}} Resultados</strong>
+      <div style="width: 100%">
+        <strong>{{ total }} Resultados</strong>
       </div>
 
-
       <div class="pagination">
-
         <select class="select-pagination" (change)="onLimitChange($event)">
           <option [value]="5">5</option>
           <option [value]="10">10</option>
           <option [value]="15">15</option>
         </select>
-  
+
         <button
           class="btn-pagination"
           [disabled]="page === 1"
@@ -86,9 +91,9 @@
         >
           ◀
         </button>
-  
+
         <span>{{ page }}</span>
-  
+
         <button
           class="btn-pagination"
           [disabled]="page * limit >= total"
@@ -98,8 +103,6 @@
         </button>
       </div>
     </div>
-
-    
   </div>
 </div>
 
@@ -107,7 +110,9 @@
 <app-confirm-dialog
   [visible]="showConfirm"
   title="Eliminar producto"
-  [message]="'¿Estas seguro de eliminar el producto ' + selectedProduct?.name + '?'"
+  [message]="
+    '¿Estas seguro de eliminar el producto ' + selectedProduct?.name + '?'
+  "
   (confirm)="deleteConfirmed()"
   (cancel)="showConfirm = false"
 >
