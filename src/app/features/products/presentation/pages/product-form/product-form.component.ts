@@ -2,8 +2,6 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { CreateProductUseCase } from '../../../domain/use-cases/create-products.usecase';
 import { UpdateProductUseCase } from '../../../domain/use-cases/update-product.usecase';
-import { PRODUCT_REPOSITORY } from '../../../domain/tokens/product-repository.token';
-import { ProductRepositoryImpl } from '../../../infrastructure/repositories/product.repository.impl';
 import {
   AbstractControl,
   FormBuilder,
@@ -18,21 +16,13 @@ import { Product } from '../../../domain/models/product.model';
 import { VerifyIdentifierUseCase } from '../../../domain/use-cases/verify-identifier.usecase';
 import { formatForDateInput } from '../../../../../core/utils/dateFormat';
 import { LoadingComponent } from '../../../../../shared/components/loading/loading.component';
+import { ProductsService } from '../../../application/services/products.service';
 
 @Component({
   selector: 'app-product-form',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, LoadingComponent],
-  providers: [
-    CreateProductUseCase,
-    UpdateProductUseCase,
-    GetProductUseCase,
-    VerifyIdentifierUseCase,
-    {
-      provide: PRODUCT_REPOSITORY,
-      useClass: ProductRepositoryImpl,
-    },
-  ],
+
   templateUrl: './product-form.component.html',
   styleUrl: './product-form.component.css',
 })
@@ -48,10 +38,7 @@ export class ProductFormComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private toast: ToastService,
-    private getProduct: GetProductUseCase,
-    private createProduct: CreateProductUseCase,
-    private updateProduct: UpdateProductUseCase,
-    private verifyIdentifier: VerifyIdentifierUseCase
+    private service: ProductsService
   ) {
     this.form = this.fb.group({
       id: [
@@ -93,7 +80,7 @@ export class ProductFormComponent implements OnInit {
 
     if (this.isEditMode && this.productId) {
       try {
-        const res = await this.getProduct.execute(this.productId);
+        const res = await this.service.executeGetProduct(this.productId);
         if (res) {
           this.form.patchValue({
             ...res,
@@ -131,17 +118,19 @@ export class ProductFormComponent implements OnInit {
       this.loading = true;
       //await new Promise(resolve => setTimeout(resolve, 3000)); // to see loader
       if (this.isEditMode) {
-        response = await this.updateProduct.execute(productToSubmit);
+        response = await this.service.executeUpdateProduct(productToSubmit);
       } else {
         //verify id
-        const exists = await this.verifyIdentifier.execute(productToSubmit.id);
+        const exists = await this.service.executeVerifyIdentifierProduct(
+          productToSubmit.id
+        );
         if (exists) {
           this.idExistsError = true;
           this.toast.showError('ID already exists');
           return;
         }
 
-        response = await this.createProduct.execute(productToSubmit);
+        response = await this.service.executeCreateProduct(productToSubmit);
       }
 
       if (response) {

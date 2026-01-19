@@ -1,26 +1,16 @@
 import { Component, HostListener, OnInit } from '@angular/core';
-import { CommonModule, DatePipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Product } from '../../../domain/models/product.model';
-import { GetProductsUseCase } from '../../../domain/use-cases/get-products.usecase';
-import { DeleteProductUseCase } from '../../../domain/use-cases/delete-product.usecase';
 import { ToastService } from '../../../../../core/services/toast.service';
 import { ConfirmDialogComponent } from '../../../../../shared/components/confirm-dialog/confirm-dialog.component';
-import { PRODUCT_REPOSITORY } from '../../../domain/tokens/product-repository.token';
-import { ProductRepositoryImpl } from '../../../infrastructure/repositories/product.repository.impl';
-import { RouterLink } from "@angular/router";
+import { RouterLink } from '@angular/router';
+import { ProductsService } from '../../../application/services/products.service';
 
 @Component({
   selector: 'app-product-list',
   standalone: true,
   imports: [CommonModule, ConfirmDialogComponent, RouterLink],
-  providers: [
-    GetProductsUseCase,
-    DeleteProductUseCase,
-    {
-      provide: PRODUCT_REPOSITORY,
-      useClass: ProductRepositoryImpl,
-    },
-  ],
+
   templateUrl: './product-list.component.html',
   styleUrl: './product-list.component.css',
 })
@@ -38,9 +28,8 @@ export class ProductListComponent implements OnInit {
   selectedProduct?: Product;
 
   constructor(
-    private getProducts: GetProductsUseCase,
-    private deleteProduct: DeleteProductUseCase,
-    private toast: ToastService
+    private toast: ToastService,
+    private service: ProductsService
   ) {}
 
   ngOnInit() {
@@ -51,8 +40,8 @@ export class ProductListComponent implements OnInit {
   async loadProducts() {
     this.loading = true;
     //await new Promise(resolve => setTimeout(resolve, 3000)); // to see loader
-    this.getProducts
-      .execute()
+    this.service
+      .executeGetProducts()
       .then((res) => {
         this.products = res.data;
         this.page = 1;
@@ -113,8 +102,7 @@ export class ProductListComponent implements OnInit {
   deleteConfirmed() {
     if (!this.selectedProduct) return;
 
-    this.deleteProduct
-      .execute(this.selectedProduct.id)
+    this.service.executeDeleteProducts(this.selectedProduct.id)
       .then((res) => {
         this.toast.showSuccess(res.message);
         this.loadProducts();
