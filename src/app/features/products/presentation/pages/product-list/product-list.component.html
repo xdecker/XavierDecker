@@ -64,28 +64,42 @@
       </tbody>
     </table>
 
-    <div class="pagination">
-      <span>Filas por página</span>
+    <div class="footer-table">
 
-      <select (change)="onLimitChange($event)">
-        <option [value]="5">5</option>
-        <option [value]="10">10</option>
-        <option [value]="15">15</option>
-      </select>
+      <div style="width: 100%;">
+        <strong>{{total}} Resultados</strong>
+      </div>
 
-      <button [disabled]="page === 1" (click)="onPageChange(page - 1)">
-        ◀
-      </button>
 
-      <span>{{ page }}</span>
+      <div class="pagination">
 
-      <button
-        [disabled]="page * limit >= total"
-        (click)="onPageChange(page + 1)"
-      >
-        ▶
-      </button>
+        <select class="select-pagination" (change)="onLimitChange($event)">
+          <option [value]="5">5</option>
+          <option [value]="10">10</option>
+          <option [value]="15">15</option>
+        </select>
+  
+        <button
+          class="btn-pagination"
+          [disabled]="page === 1"
+          (click)="onPageChange(page - 1)"
+        >
+          ◀
+        </button>
+  
+        <span>{{ page }}</span>
+  
+        <button
+          class="btn-pagination"
+          [disabled]="page * limit >= total"
+          (click)="onPageChange(page + 1)"
+        >
+          ▶
+        </button>
+      </div>
     </div>
+
+    
   </div>
 </div>
 
@@ -93,7 +107,7 @@
 <app-confirm-dialog
   [visible]="showConfirm"
   title="Eliminar producto"
-  [message]="'¿Eliminar ' + selectedProduct?.name + '?'"
+  [message]="'¿Estas seguro de eliminar el producto ' + selectedProduct?.name + '?'"
   (confirm)="deleteConfirmed()"
   (cancel)="showConfirm = false"
 >
