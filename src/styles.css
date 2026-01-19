@@ -1,1 +1,23 @@
 /* You can add global styles to this file, and also import other style files */
+.bg-primary{
+    background-color:#FFDD00
+}
+
+.btn {
+    padding: 1rem 2rem;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    width: 100%;
+    font-weight: bold;
+  }
+
+.btn-bp{
+    background-color:#FFDD00;
+    color: #002574;
+}
+
+.btn-bp-secondary{
+    background-color:#e6e9f5;
+    color: #002574;
+}

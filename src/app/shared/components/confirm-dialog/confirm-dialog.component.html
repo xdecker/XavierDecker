@@ -2,12 +2,14 @@
 <div class="overlay" (click)="onCancel()"></div>
 
 <div class="modal" role="dialog" aria-modal="true">
-  <h3 class="modal__title">{{ title }}</h3>
-  <p class="modal__message">{{ message }}</p>
+  <div class="modal__content">
+    <p class="modal__message">{{ message }}</p>
+  </div>
+  
 
   <div class="modal__actions">
-    <button class="btn btn--secondary" (click)="onCancel()">Cancelar</button>
-    <button class="btn btn--danger" (click)="onConfirm()">Confirmar</button>
+    <button class="btn btn-bp-secondary" (click)="onCancel()">Cancelar</button>
+    <button class="btn btn-bp" (click)="onConfirm()">Confirmar</button>
   </div>
 </div>
 }
