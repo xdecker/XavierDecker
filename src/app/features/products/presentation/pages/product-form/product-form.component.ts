@@ -154,9 +154,16 @@ export class ProductFormComponent implements OnInit {
   }
 
   resetForm() {
-    this.form.reset();
     this.idExistsError = false;
-    if (this.isEditMode) this.form.controls['id'].disable();
+    if (this.isEditMode) {
+      const idValue = this.form.controls['id'].value;
+      console.log(idValue);
+      this.form.reset();
+      this.form.controls['id'].setValue(idValue);
+      this.form.controls['id'].disable();
+    } else {
+      this.form.reset();
+    }
   }
 
   isInvalid(controlName: string) {
