@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { Product } from '../../../domain/models/product.model';
 import { GetProductsUseCase } from '../../../domain/use-cases/get-products.usecase';
@@ -26,7 +26,7 @@ import { ProductRepositoryImpl } from '../../../infrastructure/repositories/prod
 export class ProductListComponent implements OnInit {
   products: Product[] = [];
   filteredProducts: Product[] = [];
-
+  dropdownOpen: string | null = null;
   page = 1;
   limit = 5;
   total = 0;
@@ -123,5 +123,26 @@ export class ProductListComponent implements OnInit {
       .finally(() => {
         this.showConfirm = false;
       });
+  }
+
+  toggleDropdown(productId: string) {
+    if (this.dropdownOpen === productId) {
+      this.dropdownOpen = null;
+    } else {
+      this.dropdownOpen = productId;
+    }
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: Event) {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.dropdown')) {
+      this.dropdownOpen = null;
+    }
+  }
+
+  editProduct(product: Product) {
+    this.toast.showSuccess(`Editar producto: ${product.name}`);
+    this.dropdownOpen = null; // cerramos el dropdown
   }
 }
