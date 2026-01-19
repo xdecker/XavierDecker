@@ -1,0 +1,20 @@
+.header{
+    background-color: white;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.title{
+    text-transform: uppercase;
+    color: #002574;
+    text-align: center;
+    margin: 0;
+}
+
+.header-inner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
