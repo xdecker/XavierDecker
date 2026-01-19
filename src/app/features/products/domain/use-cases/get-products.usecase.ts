@@ -1,9 +1,15 @@
+import { Inject, Injectable } from '@angular/core';
 import { ProductRepository } from '../repositories/product.repository';
+import { PRODUCT_REPOSITORY } from '../tokens/product-repository.token';
 
+@Injectable()
 export class GetProductsUseCase {
-  constructor(private repository: ProductRepository) {}
+  constructor(
+    @Inject(PRODUCT_REPOSITORY)
+    private repository: ProductRepository
+  ) {}
 
-  execute(params: { page: number; limit: number; search: string }) {
-    return this.repository.getAll(params);
+  execute() {
+    return this.repository.getAll();
   }
 }

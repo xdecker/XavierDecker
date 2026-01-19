@@ -1,0 +1,80 @@
+<div class="product-list">
+  <!-- input buscador -->
+  <input
+    #searchInput
+    type="text"
+    placeholder="Buscar producto"
+    (input)="onSearch(searchInput.value)"
+    class="search-input"
+  />
+  <div class="product-table">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Logo</th>
+          <th>Nombre del producto</th>
+          <th>Descripción</th>
+          <th>Fecha de liberación</th>
+          <th>Fecha de reestructuración</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @if (loading) {
+        <tr>
+          <td colspan="6">Cargando...</td>
+        </tr>
+        } @else { @for (p of filteredProducts; track p.id) {
+        <tr>
+          <td>
+            <img [src]="p.logo" class="logo" />
+          </td>
+          <td>{{ p.name }}</td>
+          <td>{{ p.description }}</td>
+          <td>{{ p.date_release | date : "yyyy-MM-dd" }}</td>
+          <td>{{ p.date_revision | date : "yyyy-MM-dd" }}</td>
+          <td>
+            <button (click)="confirmDelete(p)" class="btn btn--danger">
+              Eliminar
+            </button>
+          </td>
+        </tr>
+        } }
+      </tbody>
+    </table>
+
+    <div class="pagination">
+      <span>Filas por página</span>
+
+      <select (change)="onLimitChange($event)">
+        <option [value]="5">5</option>
+        <option [value]="10">10</option>
+        <option [value]="15">15</option>
+      </select>
+
+      <button [disabled]="page === 1" (click)="onPageChange(page - 1)">
+        ◀
+      </button>
+
+      <span>{{ page }}</span>
+
+      <button
+        [disabled]="page * limit >= total"
+        (click)="onPageChange(page + 1)"
+      >
+        ▶
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Confirm dialog -->
+<app-confirm-dialog
+  [visible]="showConfirm"
+  title="Eliminar producto"
+  [message]="'¿Eliminar ' + selectedProduct?.name + '?'"
+  (confirm)="deleteConfirmed()"
+  (cancel)="showConfirm = false"
+>
+</app-confirm-dialog>

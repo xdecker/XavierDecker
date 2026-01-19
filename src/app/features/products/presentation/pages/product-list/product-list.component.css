@@ -1,0 +1,54 @@
+.product-list {
+    padding: 3rem;
+
+  }
+
+  .product-table {
+    background-color: white;
+    padding: 40px;
+  }
+  
+  .search-input {
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    width: 300px;
+    border-radius: 10px;
+    border: 2px solid #e1e1e1;
+    height: 30px;
+  }
+  
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th{
+    background-color:#f9f9f9;
+  }
+  
+  th, td {
+    border-bottom: 1px solid #dddddda4;
+    padding: 1rem;
+    text-align: center;
+  }
+  
+  .logo {
+    width: 40px;
+    height: auto;
+  }
+  
+  .btn--danger {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 0.4rem 0.7rem;
+    cursor: pointer;
+  }
+  
+  .pagination {
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  

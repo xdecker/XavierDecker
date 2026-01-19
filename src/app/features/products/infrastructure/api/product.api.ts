@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Product } from '../../domain/models/product.model';
+import { environment } from '../../../../../environments/environment';
 
 export interface ProductResponse {
   data: Product[];
@@ -12,19 +13,12 @@ export interface ProductResponse {
   providedIn: 'root',
 })
 export class ProductApi {
-  private readonly baseUrl = '/products';
+  private readonly baseUrl = environment.apiUrl + 'products';
 
   constructor(private http: HttpClient) {}
 
-  getProducts(params: { page: number; limit: number; search: string }) {
-    let httpParams = new HttpParams()
-      .set('page', params.page)
-      .set('limit', params.limit)
-      .set('search', params.search);
-
-    return this.http.get<{ data: Product[]; total: number }>(this.baseUrl, {
-      params: httpParams,
-    });
+  getProducts() {
+    return this.http.get<{ data: Product[]; total: number }>(this.baseUrl);
   }
 
   deleteProduct(id: string): Observable<void> {

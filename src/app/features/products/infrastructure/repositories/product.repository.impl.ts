@@ -10,12 +10,8 @@ import { firstValueFrom, map, Observable } from 'rxjs';
 export class ProductRepositoryImpl implements ProductRepository {
   constructor(private api: ProductApi) {}
 
-  async getAll(params: {
-    page: number;
-    limit: number;
-    search: string;
-  }): Promise<{ data: Product[]; total: number }> {
-    return firstValueFrom(this.api.getProducts(params));
+  async getAll(): Promise<{ data: Product[]; total: number }> {
+    return firstValueFrom(this.api.getProducts());
   }
 
   async delete(id: string): Promise<void> {
