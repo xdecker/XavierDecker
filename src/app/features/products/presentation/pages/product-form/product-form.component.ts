@@ -1,0 +1,189 @@
+import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { CreateProductUseCase } from '../../../domain/use-cases/create-products.usecase';
+import { UpdateProductUseCase } from '../../../domain/use-cases/update-product.usecase';
+import { PRODUCT_REPOSITORY } from '../../../domain/tokens/product-repository.token';
+import { ProductRepositoryImpl } from '../../../infrastructure/repositories/product.repository.impl';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ToastService } from '../../../../../core/services/toast.service';
+import { GetProductUseCase } from '../../../domain/use-cases/get-product.usecase';
+import { Product } from '../../../domain/models/product.model';
+import { VerifyIdentifierUseCase } from '../../../domain/use-cases/verify-identifier.usecase';
+
+@Component({
+  selector: 'app-product-form',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule],
+  providers: [
+    CreateProductUseCase,
+    UpdateProductUseCase,
+    GetProductUseCase,
+    VerifyIdentifierUseCase,
+    {
+      provide: PRODUCT_REPOSITORY,
+      useClass: ProductRepositoryImpl,
+    },
+  ],
+  templateUrl: './product-form.component.html',
+  styleUrl: './product-form.component.css',
+})
+export class ProductFormComponent implements OnInit {
+  form: FormGroup;
+  loading = false;
+  isEditMode = false;
+  productId: string | null = null;
+  idExistsError = false;
+
+  constructor(
+    private fb: FormBuilder,
+    private route: ActivatedRoute,
+    private router: Router,
+    private toast: ToastService,
+    private getProduct: GetProductUseCase,
+    private createProduct: CreateProductUseCase,
+    private updateProduct: UpdateProductUseCase,
+    private verifyIdentifier: VerifyIdentifierUseCase
+  ) {
+    this.form = this.fb.group({
+      id: [
+        { value: '', disabled: false },
+        [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.maxLength(10),
+        ],
+      ],
+      name: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(5),
+          Validators.maxLength(100),
+        ],
+      ],
+      description: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(10),
+          Validators.maxLength(200),
+        ],
+      ],
+      logo: ['', Validators.required],
+      date_release: [
+        '',
+        [Validators.required, this.validateReleaseDate.bind(this)],
+      ],
+      date_revision: [{ value: '', disabled: true }, [Validators.required]],
+    });
+  }
+
+  async ngOnInit() {
+    this.productId = this.route.snapshot.paramMap.get('id');
+    this.isEditMode = !!this.productId;
+
+    if (this.isEditMode && this.productId) {
+      try {
+        const res = await this.getProduct.execute(this.productId);
+        if (res) {
+          this.form.patchValue(res);
+          this.form.controls['id'].disable();
+        }
+      } catch {
+        this.toast.showError('Error cargando el producto');
+      }
+    }
+
+    this.form.get('id')?.valueChanges.subscribe((value) => {
+      this.idExistsError = false;
+    });
+
+    this.form.get('date_release')?.valueChanges.subscribe((value) => {
+      this.updateRevisionDate(value);
+    });
+  }
+
+  async onSubmit() {
+    try {
+      if (this.form.invalid) {
+        this.form.markAllAsTouched();
+        this.toast.showError('Por favor, ingrese datos correctamente');
+        return;
+      }
+      const productToSubmit = this.form.getRawValue() as Product;
+      let response: { data: Product; message: string } | undefined;
+      this.loading = true;
+      if (this.isEditMode) {
+        response = await this.updateProduct.execute(productToSubmit);
+      } else {
+        //verify id
+        const exists = await this.verifyIdentifier.execute(productToSubmit.id);
+        if (exists) {
+          this.idExistsError = true;
+          this.toast.showError('ID already exists');
+          return;
+        }
+
+        response = await this.createProduct.execute(productToSubmit);
+      }
+
+      if (response) {
+        this.toast.showSuccess(response.message);
+        this.router.navigate(['/products']);
+      }
+    } catch (err: any) {
+      this.toast.showError(err?.message ?? 'No se pudo procesar solicitud');
+    } finally {
+      this.loading = false;
+    }
+  }
+
+  resetForm() {
+    this.form.reset();
+    this.idExistsError = false;
+    if (this.isEditMode) this.form.controls['id'].disable();
+  }
+
+  isInvalid(controlName: string) {
+    const control = this.form.get(controlName);
+    return !!control && control.invalid && (control.dirty || control.touched);
+  }
+
+  validateReleaseDate(control: AbstractControl) {
+    if (!control.value) return null;
+
+    const today = new Date();
+    const todayNum =
+      today.getFullYear() * 10000 +
+      (today.getMonth() + 1) * 100 +
+      today.getDate();
+
+    const [year, month, day] = control.value.split('-').map(Number);
+    const inputNum = year * 10000 + month * 100 + day;
+
+    return inputNum >= todayNum ? null : { invalidReleaseDate: true };
+  }
+
+  updateRevisionDate(releaseDateStr: string) {
+    if (!releaseDateStr) {
+      this.form.get('date_revision')?.setValue('');
+      return;
+    }
+
+    const [year, month, day] = releaseDateStr.split('-').map(Number);
+    const revisionYear = year + 1;
+
+    const revisionDateStr = `${revisionYear}-${String(month).padStart(
+      2,
+      '0'
+    )}-${String(day).padStart(2, '0')}`;
+    this.form.get('date_revision')?.setValue(revisionDateStr);
+  }
+}

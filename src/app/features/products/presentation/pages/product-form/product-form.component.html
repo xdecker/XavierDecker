@@ -1,0 +1,112 @@
+<div class="form-container">
+  <div class="form-header">
+    <h2>Formulario de Registro</h2>
+    <hr />
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="form-row">
+      <div class="form-group">
+        <label>ID</label>
+        <input
+          formControlName="id"
+          [class.invalid]="isInvalid('id')"
+          [disabled]="isEditMode"
+        />
+        <small class="error" *ngIf="isInvalid('id')">
+          <span *ngIf="form.controls['id'].errors?.['required']"
+            >Este campo es requerido</span
+          >
+          <span *ngIf="form.controls['id'].errors?.['minlength']"
+            >Mínimo 3 caracteres</span
+          >
+          <span *ngIf="form.controls['id'].errors?.['maxlength']"
+            >Máximo 10 caracteres</span
+          >
+        </small>
+        <small class="error" *ngIf="idExistsError"><span>El ID no es válido</span></small>
+      </div>
+      <div class="form-group">
+        <label>Nombre</label>
+        <input formControlName="name" [class.invalid]="isInvalid('name')" />
+        <small class="error" *ngIf="isInvalid('name')">
+          <span *ngIf="form.controls['name'].errors?.['required']"
+            >Este campo es requerido</span
+          >
+          <span *ngIf="form.controls['name'].errors?.['minlength']"
+            >Mínimo 5 caracteres</span
+          >
+          <span *ngIf="form.controls['name'].errors?.['maxlength']"
+            >Máximo 100 caracteres</span
+          >
+        </small>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Descripción</label>
+        <input
+          formControlName="description"
+          [class.invalid]="isInvalid('description')"
+        />
+        <small class="error" *ngIf="isInvalid('description')">
+          <span *ngIf="form.controls['description'].errors?.['required']"
+            >Este campo es requerido</span
+          >
+          <span *ngIf="form.controls['description'].errors?.['minlength']"
+            >Mínimo 10 caracteres</span
+          >
+          <span *ngIf="form.controls['description'].errors?.['maxlength']"
+            >Máximo 200 caracteres</span
+          >
+        </small>
+      </div>
+      <div class="form-group">
+        <label>Logo</label>
+        <input formControlName="logo" [class.invalid]="isInvalid('logo')" />
+        <small class="error" *ngIf="isInvalid('logo')">
+          Este campo es requerido
+        </small>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Fecha Liberación</label>
+        <input
+          type="date"
+          formControlName="date_release"
+          [class.invalid]="isInvalid('date_release')"
+        />
+        <small class="error" *ngIf="isInvalid('date_release')">
+          <span *ngIf="form.controls['date_release'].errors?.['required']"
+            >Este campo es requerido</span
+          >
+          <span
+            *ngIf="form.controls['date_release'].errors?.['invalidReleaseDate']"
+          >
+            La fecha debe ser hoy o mayor
+          </span>
+        </small>
+      </div>
+      <div class="form-group">
+        <label>Fecha Revisión</label>
+        <input
+          type="date"
+          formControlName="date_revision"
+          [class.invalid]="isInvalid('date_revision')"
+        />
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn btn-secondary" (click)="resetForm()">
+        Reiniciar
+      </button>
+      <button type="submit" class="btn btn-bp" [disabled]="form.invalid">
+        {{ isEditMode ? "Actualizar" : "Agregar" }}
+      </button>
+    </div>
+  </form>
+</div>
