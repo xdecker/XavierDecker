@@ -17,11 +17,12 @@ import { GetProductUseCase } from '../../../domain/use-cases/get-product.usecase
 import { Product } from '../../../domain/models/product.model';
 import { VerifyIdentifierUseCase } from '../../../domain/use-cases/verify-identifier.usecase';
 import { formatForDateInput } from '../../../../../core/utils/dateFormat';
+import { LoadingComponent } from '../../../../../shared/components/loading/loading.component';
 
 @Component({
   selector: 'app-product-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, LoadingComponent],
   providers: [
     CreateProductUseCase,
     UpdateProductUseCase,
@@ -128,6 +129,7 @@ export class ProductFormComponent implements OnInit {
       const productToSubmit = this.form.getRawValue() as Product;
       let response: { data: Product; message: string } | undefined;
       this.loading = true;
+      //await new Promise(resolve => setTimeout(resolve, 3000)); // to see loader
       if (this.isEditMode) {
         response = await this.updateProduct.execute(productToSubmit);
       } else {
