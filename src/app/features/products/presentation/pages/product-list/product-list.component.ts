@@ -48,8 +48,9 @@ export class ProductListComponent implements OnInit {
     this.loadProducts();
   }
 
-  loadProducts() {
+  async loadProducts() {
     this.loading = true;
+    //await new Promise(resolve => setTimeout(resolve, 3000)); // to see loader
     this.getProducts
       .execute()
       .then((res) => {

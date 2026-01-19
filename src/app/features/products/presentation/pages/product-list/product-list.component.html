@@ -30,9 +30,13 @@
 
       <tbody>
         @if (loading) {
-        <tr>
-          <td colspan="6">Cargando...</td>
-        </tr>
+          <tr>
+            <td colspan="7">
+              <div class="skeleton-row" *ngFor="let n of [1,2,3,4,5]">
+                <div class="skeleton-cell" *ngFor="let c of [1,2,3,4,5,6,7]"></div>
+              </div>
+            </td>
+          </tr>
         } @else { @for (p of filteredProducts; track p.id) {
         <tr>
           <td>
