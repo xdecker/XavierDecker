@@ -28,7 +28,15 @@ body {
     color: #002574;
 }
 
+.btn-bp:hover {
+  background-color: #d8bc04;
+}
+
 .btn-bp-secondary{
     background-color:#e6e9f5;
     color: #002574;
+}
+
+.btn-bp-secondary:hover{
+  background-color:#cdd0db;
 }
