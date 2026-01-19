@@ -16,6 +16,7 @@ import { ToastService } from '../../../../../core/services/toast.service';
 import { GetProductUseCase } from '../../../domain/use-cases/get-product.usecase';
 import { Product } from '../../../domain/models/product.model';
 import { VerifyIdentifierUseCase } from '../../../domain/use-cases/verify-identifier.usecase';
+import { formatForDateInput } from '../../../../../core/utils/dateFormat';
 
 @Component({
   selector: 'app-product-form',
@@ -81,7 +82,7 @@ export class ProductFormComponent implements OnInit {
         '',
         [Validators.required, this.validateReleaseDate.bind(this)],
       ],
-      date_revision: [{ value: '', disabled: true }, [Validators.required]],
+      date_revision: [{ value: '' }],
     });
   }
 
@@ -93,8 +94,13 @@ export class ProductFormComponent implements OnInit {
       try {
         const res = await this.getProduct.execute(this.productId);
         if (res) {
-          this.form.patchValue(res);
-          this.form.controls['id'].disable();
+          this.form.patchValue({
+            ...res,
+            date_release: formatForDateInput(res.date_release),
+            date_revision: formatForDateInput(res.date_revision),
+          });
+          this.form.get('id')?.disable();
+          this.form.markAllAsTouched();
         }
       } catch {
         this.toast.showError('Error cargando el producto');
@@ -108,10 +114,12 @@ export class ProductFormComponent implements OnInit {
     this.form.get('date_release')?.valueChanges.subscribe((value) => {
       this.updateRevisionDate(value);
     });
+    this.form.get('date_revision')?.disable();
   }
 
   async onSubmit() {
     try {
+      console.log('onsubmit');
       if (this.form.invalid) {
         this.form.markAllAsTouched();
         this.toast.showError('Por favor, ingrese datos correctamente');
@@ -185,5 +193,11 @@ export class ProductFormComponent implements OnInit {
       '0'
     )}-${String(day).padStart(2, '0')}`;
     this.form.get('date_revision')?.setValue(revisionDateStr);
+  }
+
+  get isFormValid() {
+    return Object.values(this.form.controls)
+      .filter((c) => !c.disabled)
+      .every((c) => c.valid);
   }
 }

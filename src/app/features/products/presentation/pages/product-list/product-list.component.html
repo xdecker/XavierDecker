@@ -62,7 +62,7 @@
                 *ngIf="dropdownOpen === p.id"
                 (click)="$event.stopPropagation()"
               >
-                <button (click)="editProduct(p)">Editar</button>
+                <a [routerLink]="['/products/edit', p.id]">Editar</a>
                 <button (click)="confirmDelete(p)">Eliminar</button>
               </div>
             </div>
