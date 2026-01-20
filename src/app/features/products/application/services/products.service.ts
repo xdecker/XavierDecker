@@ -1,4 +1,3 @@
-// src/app/features/products/application/services/products.service.ts
 import { Injectable, Inject } from '@angular/core';
 import { GetProductsUseCase } from '../../domain/use-cases/get-products.usecase';
 import { PRODUCT_REPOSITORY } from '../../domain/tokens/product-repository.token';

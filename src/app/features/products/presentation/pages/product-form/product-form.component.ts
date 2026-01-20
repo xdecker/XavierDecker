@@ -1,7 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { CreateProductUseCase } from '../../../domain/use-cases/create-products.usecase';
-import { UpdateProductUseCase } from '../../../domain/use-cases/update-product.usecase';
 import {
   AbstractControl,
   FormBuilder,
@@ -11,10 +9,8 @@ import {
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastService } from '../../../../../core/services/toast.service';
-import { GetProductUseCase } from '../../../domain/use-cases/get-product.usecase';
 import { Product } from '../../../domain/models/product.model';
-import { VerifyIdentifierUseCase } from '../../../domain/use-cases/verify-identifier.usecase';
-import { formatForDateInput } from '../../../../../core/utils/dateFormat';
+import { formatForDateInput } from '../../../../../core/utils/dateformat';
 import { LoadingComponent } from '../../../../../shared/components/loading/loading.component';
 import { ProductsService } from '../../../application/services/products.service';
 
