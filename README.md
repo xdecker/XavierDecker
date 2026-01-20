@@ -1,62 +1,80 @@
-# Products
+## Proyecto Angular - Gestión de Productos
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.19.
+Este proyecto es una aplicación en Angular para la gestión de productos, diseñada con una **arquitectura** basada en capas y casos de uso (Use Cases) para mantener el código ordenado y escalable a cualquier consumo de api.
 
-## Development server
+## Arquitectura del proyecto
 
-To start a local development server, run:
+- **domain**: Contiene los modelos, interfaces y casos de uso de negocio (Use Cases). Evita cualquier dependencia externa.
+- **application**: Servicios que conectan los casos de uso con la infraestructura. Se encargan de la lógica de la app.
+- **infrastructure**: Todo lo relacionado con APIs, repositorios y comunicación con el backend.
+- **core**: Servicios generales, herramientas y componentes compartidos (como `ToastService` y `ToastComponent`).
+- **shared**: Componentes reutilizables a nivel de UI, como loading spinners,headers o diálogos de confirmación.
+- **features**: Funcionalidades concretas, en este caso el manejo de productos (`product-list`, `product-form`).
+
+## Como iniciar el proyecto
+
+1. Clonar el proyecto
+2. Instalar dependencias ejecutando `npm install`
+3. Levantar el proyecto con `npm start` ó `ng serve` (asegurarse de estar ubicados en la carpeta raiz)
+4. El proyecto se levantará en la ruta por defecto **http://localhost:4200/**
+
+
+
+## Tests
+
+En este proyecto implementamos **dos tipos de tests**:
+
+### 1. **Tests unitarios con Karma + Jasmine**
+
+Aunque **Jest** era un requisito inicial, por criterios de compatibilidad con Angular standalone components y el setup existente, se decidió usar **Karma + Jasmine**. Esto permitió:
+
+- Ejecutar tests directamente desde `ng test`.
+- Obtener reportes de coverage completos.
+- Mockear dependencias externas (HttpClient, repositorios, servicios) sin tocar la lógica de negocio.
+
+**Cobertura de componentes y servicios**
+
+- **Componentes**: Se testea la creación, interacción de formularios, validaciones, triggers de eventos y comportamiento visual.
+- **Servicios**: Se mockean dependencias externas (como `HttpClient` o repositorios) y se verifican llamadas a métodos, resultados y errores.
+- **Utilidades**: Se testean funciones puras como `formatForDateInput` para asegurar que devuelvan el resultado correcto según diferentes inputs.
+
+### Cómo correr los tests
 
 ```bash
-ng serve
-```
+# Instalar dependencias
+npm install
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
+# Ejecutar todos los tests con Karma
 ng test
 ```
 
-## Running end-to-end tests
+Esto abrirá el navegador de Karma y ejecutará todos los specs. Además, generará un reporte de coverage, mostrando qué archivos están cubiertos y qué líneas faltan. si se desea ver el coverage en la consola directamente puede ejecutar `ng test --code-coverage`
 
-For end-to-end (e2e) testing, run:
+### 2. \*\*Tests unitarios con JEST
+
+Cubre tests más globales, integraciones o utilidades independientes. En el caso de este proyecto, la capa de dominio, con los casos de uso.
+
+La carpeta test/ está separada de src/ para mantener los tests de Jest independientes de la app Angular.
+
+Jest genera su propio reporte de coverage, independiente de Karma.
+
+
+### Cómo correr los test de JEST
 
 ```bash
-ng e2e
+
+# Ejecutar todos los tests
+npm run test:domain
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## Con esto se asegura que:
 
-## Additional Resources
+Todo componente Angular se prueba con Karma + Jasmine.
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Funciones y lógica general se prueban con Jest.
+
+Ambos tipos de tests se pueden correr de manera independiente y cuentan para cobertura.
 
 
-agregue cors
+## Autor
+__Xavier Decker__
