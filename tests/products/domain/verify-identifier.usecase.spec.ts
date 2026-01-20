@@ -1,4 +1,4 @@
-import { VerifyIdentifierUseCase } from './verify-identifier.usecase';
+import { VerifyIdentifierUseCase } from '../../../src/app/features/products/domain/use-cases/verify-identifier.usecase';
 
 describe('VerifyIdentifierUseCase', () => {
   let useCase: VerifyIdentifierUseCase;

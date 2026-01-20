@@ -1,5 +1,5 @@
-import { CreateProductUseCase } from './create-products.usecase';
-import { Product } from '../models/product.model';
+import { CreateProductUseCase } from '../../../src/app/features/products/domain/use-cases/create-products.usecase';
+import { Product } from '../../../src/app/features/products/domain/models/product.model';
 
 describe('CreateProductUseCase', () => {
   let useCase: CreateProductUseCase;

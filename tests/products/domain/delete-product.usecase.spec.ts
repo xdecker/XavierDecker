@@ -1,4 +1,4 @@
-import { DeleteProductUseCase } from './delete-product.usecase';
+import { DeleteProductUseCase } from '../../../src/app/features/products/domain/use-cases/delete-product.usecase';
 
 describe('DeleteProductUseCase', () => {
   let useCase: DeleteProductUseCase;

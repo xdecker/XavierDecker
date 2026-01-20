@@ -3,10 +3,8 @@ import type { Config } from '@jest/types';
 const config: Config.InitialOptions = {
   preset: 'ts-jest',
   testEnvironment: 'node',
-
-  testMatch: [
-    '<rootDir>/src/app/features/**/domain/**/*.spec.ts',
-  ],
+  roots: ['<rootDir>/tests'],
+  testMatch: ['**/*.spec.ts'],
 
   collectCoverage: true,
 

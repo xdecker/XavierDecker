@@ -1,5 +1,5 @@
-import { GetProductsUseCase } from './get-products.usecase';
-import { Product } from '../models/product.model';
+import { GetProductsUseCase } from '../../../src/app/features/products/domain/use-cases/get-products.usecase';
+import { Product } from '../../../src/app/features/products/domain/models/product.model';
 
 const mockRepo = {
   getAll: jest.fn(),

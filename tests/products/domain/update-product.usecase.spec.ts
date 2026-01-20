@@ -1,5 +1,5 @@
-import { UpdateProductUseCase } from './update-product.usecase';
-import { Product } from '../models/product.model';
+import { UpdateProductUseCase } from '../../../src/app/features/products/domain/use-cases/update-product.usecase';
+import { Product } from '../../../src/app/features/products/domain/models/product.model';
 
 describe('UpdateProductUseCase', () => {
   let useCase: UpdateProductUseCase;
